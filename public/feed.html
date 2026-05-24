@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум | Подмосковье RP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        
+        body { 
+            background: radial-gradient(circle at top center, #1c1e24 0%, #0d0e12 100%); 
+            color: #e2e8f0; 
+            min-height: 100vh; 
+            padding-bottom: 60px; 
+        }
+
+        /* Премиальная геймерская шапка */
+        header { 
+            background: rgba(20, 22, 28, 0.4); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 122, 0, 0.15); 
+            padding: 20px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #fff; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            cursor: pointer;
+        }
+        
+        .logo span { 
+            background: linear-gradient(90deg, #ff7a00, #ffaa00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-block { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        
+        .user-name { 
+            font-size: 13px; 
+            font-weight: 600;
+            color: #cbd5e1; 
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* Подсветка никнейма при наведении */
+        .user-name:hover {
+            color: #ff7a00;
+            border-color: rgba(255, 122, 0, 0.3);
+            background: rgba(255, 122, 0, 0.05);
+        }
+        
+        .logout-btn { 
+            padding: 8px 18px; 
+            background: rgba(239, 68, 68, 0.1); 
+            border: 1px solid rgba(239, 68, 68, 0.3); 
+            color: #ef4444; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .logout-btn:hover { 
+            background: #ef4444; 
+            color: white; 
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Контейнер категорий */
+        .forum-container { 
+            max-width: 1100px; 
+            margin: 50px auto; 
+            padding: 0 25px; 
+        }
+        
+        .forum-title { 
+            font-size: 14px; 
+            font-weight: 700;
+            color: #64748b; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        
+        .forum-title::before { 
+            content: ''; 
+            display: inline-block; 
+            width: 6px; 
+            height: 18px; 
+            background: linear-gradient(#ff7a00, #ffaa00); 
+            border-radius: 4px; 
+            box-shadow: 0 0 10px rgba(255, 122, 0, 0.6);
+        }
+
+        .categories-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+        }
+        
+        .category-row { 
+            background: rgba(22, 24, 30, 0.6); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.04); 
+            border-radius: 16px; 
+            padding: 24px 30px; 
+            display: grid; 
+            grid-template-columns: 60px 1fr 130px 220px; 
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-row:hover { 
+            background: rgba(28, 31, 39, 0.8); 
+            border-color: rgba(255, 122, 0, 0.3);
+            transform: translateY(-3px) scale(1.01); 
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 122, 0, 0.05);
+        }
+
+        .category-icon { 
+            font-size: 22px; 
+            background: rgba(255, 122, 0, 0.1);
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s;
+        }
+        
+        .category-row:hover .category-icon {
+            background: #ff7a00;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 122, 0, 0.5);
+            border-color: #ff7a00;
+        }
+
+        .category-info { padding-right: 20px; }
+        .category-info h3 { 
+            font-size: 16px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            margin-bottom: 6px; 
+            transition: 0.2s;
+        }
+        
+        .category-row:hover .category-info h3 {
+            color: #ff9d42;
+        }
+        
+        .category-info p { 
+            font-size: 13px; 
+            color: #64748b; 
+            line-height: 1.5; 
+            font-weight: 400;
+        }
+
+        .category-stats { 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            width: 90px;
+            margin: 0 auto;
+        }
+        
+        .stats-count { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: #ff7a00; 
+        }
+        
+        .stats-label { 
+            font-size: 10px; 
+            color: #475569; 
+            text-transform: uppercase; 
+            margin-top: 2px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .category-last-post { 
+            font-size: 13px; 
+            color: #94a3b8; 
+            border-left: 1px solid rgba(255, 255, 255, 0.06); 
+            padding-left: 25px; 
+        }
+        
+        .last-post-title { 
+            color: #f1f5f9; 
+            font-weight: 600; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            max-width: 190px; 
+        }
+        
+        .last-post-user { 
+            font-size: 11px; 
+            color: #475569; 
+            margin-top: 4px; 
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="window.location.href='/feed.html'">ПОДМОСКОВЬЕ <span>ROLEPLAY</span></div>
+    <div class="user-block">
+        <div class="user-name" id="user-email" onclick="window.location.href='/profile.html'">Загрузка...</div>
+        <button class="logout-btn" id="logout-btn">Выйти</button>
+    </div>
+</header>
+
+<div class="forum-container">
+    <div class="forum-title">Игровые разделы</div>
+    
+    <div class="categories-list" id="categories-container">
+        </div>
+</div>
+
+<script>
+    // Защита страницы форума
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        window.location.href = '/index.html'; // Исправлено: указан корректный путь для редиректа при отсутствии сессии
+    } else {
+        document.getElementById('user-email').textContent = user.username || user.email;
+    }
+
+    // Кнопка выхода
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('user');
+        window.location.href = '/index.html'; // Исправлено: переход на главную страницу входа
+    });
+
+    // Загрузка категорий с бэкенда SQLite
+    async function loadCategories() {
+        try {
+            const res = await fetch('/categories');
+            const categories = await res.json();
+            const container = document.getElementById('categories-container');
+            
+            container.innerHTML = '';
+
+            categories.forEach(cat => {
+                const row = document.createElement('div');
+                row.className = 'category-row';
+                // При клике открываем конкретную категорию (на перспективу) или выводим заглушку корректно
+                row.onclick = () => {
+                    alert(`Вы открыли раздел: ${cat.title}`);
+                };
+
+                row.innerHTML = `
+                    <div class="category-icon">📁</div>
+                    <div class="category-info">
+                        <h3>${cat.title}</h3>
+                        <p>${cat.description || ''}</p>
+                    </div>
+                    <div class="category-stats">
+                        <div class="stats-count">0</div>
+                        <div class="stats-label">Темы</div>
+                    </div>
+                    <div class="category-last-post">
+                        <div class="last-post-title">Нет активных тем</div>
+                        <div class="last-post-user">Раздел пуст</div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        } catch (err) {
+            console.error('Ошибка загрузки разделов форума:', err);
+        }
+    }
+
+    loadCategories();
+</script>
+
+</body>
+</html>
